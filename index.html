@@ -56,7 +56,7 @@
   </head>
   <body>
     <h1>User Study Questionnaire</h1>
-    <div class="notice">说明：每个案例包含一个输入视频（最左侧）和四个匿名方法的结果（顺序已随机）。请在下方四项指标中分别选择你认为最好的方法（A/B/C/D）。</div>
+    <div class="notice">说明：本任务为视频换背景任务，请您判断生成的视频中背景是否符合文本prompt条件，生成的视频前后帧是否连续平滑，生成的视频原来的前景（结构、动作等）是否保持一致，生成的视频前景光照是否和谐，每个案例包含一个输入视频（最左侧）和四个匿名方法的结果（顺序已随机）。请在下方四项指标中分别选择你认为最好的方法（A/B/C/D）。</div>
     <div id="controls" style="margin: 8px 0 12px; display: flex; gap: 8px; align-items: center;">
       <button id="prevBtn">上一页</button>
       <div class="progress" aria-label="progress">
@@ -89,8 +89,8 @@
           const criteria = [
             { key: 'relevance', label: '(a) relevance to the prompt 视频质量和文本的对齐程度' },
             { key: 'temporal', label: '(b) temporal coherence 视频帧间连续性和平滑度' },
-            { key: 'foreground', label: '(c) preservation of foreground details and motion 前景细节和运动的保留程度' },
-            { key: 'relighting', label: '(d) quality and harmonization of relighting on the foreground 前景重光照的质量和一致性' },
+            { key: 'foreground', label: '(c) preservation of foreground details and motion 相比于原视频，前景细节和运动的保留程度和一致性' },
+            { key: 'relighting', label: '(d) quality and harmonization of relighting on the foreground 前景重光照的质量和光照和谐程度' },
           ];
 
           // persist selections and shuffle mapping in-memory
@@ -294,9 +294,22 @@
                 });
               });
 
+              // detailed per-case selections and A/B/C/D mapping
+              const letters = ['A','B','C','D'];
+              const details = {}; // { [caseName]: { answers: {criterion: methodKey}, options: {A: methodKey, ...} } }
+              entries.forEach(([caseName]) => {
+                const answers = selections[caseName] || {};
+                const mapping = shuffleMap[caseName] || [];
+                const options = {};
+                letters.forEach((L, idx) => {
+                  if (mapping[idx]) options[L] = mapping[idx];
+                });
+                details[caseName] = { answers, options };
+              });
+
               const nickname = (nicknameInput && nicknameInput.value || '').trim();
               const safeNick = nickname.replace(/[^a-zA-Z0-9-_]+/g, '_') || 'anon';
-              const payload = { nickname, counts };
+              const payload = { nickname, counts, details };
               const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
               const url = URL.createObjectURL(blob);
               const a = document.createElement('a');
