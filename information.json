@@ -1,0 +1,227 @@
+{
+  "case": {
+    "box_ic": {
+      "video": {
+        "input": "box_ic.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_box_ic_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "a black woman boxing outdoors in a park under bright warm sunlight, sunlight shining on her face, uniform illumination.",
+        "zh": "一位黑人女性在公园的明亮暖阳下进行拳击训练，阳光照在她的脸上，光照均匀。"
+      }
+    },
+    "cake_z": {
+      "video": {
+        "input": "cake_z.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_cake_z_low_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A decorated cake on a small wooden table, placed on a lush grassy patch in a garden bathed in warm sunlight.",
+        "zh": "一份装饰好的蛋糕放在小木桌上，置于花园的茂密草地上，沐浴在温暖阳光中。"
+      }
+    },
+    "cat_ic": {
+      "video": {
+        "input": "cat_ic.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_cat_ic_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A cat standing in a broad living room on a wooden floor; sunlight from the window casts a warm shadow, the background is clear and bright.",
+        "zh": "一只猫站在宽敞的客厅木地板上，窗外阳光投下温暖的影子，背景清晰明亮。"
+      }
+    },
+    "cat1_garden_z": {
+      "video": {
+        "input": "cat1_z.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_cat1_garden_z_low_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A tabby cat lying leisurely on the lush grass of a garden, with scattered daisies around it.",
+        "zh": "一只虎斑猫慵懒地躺在花园葱郁的草地上，周围散落着雏菊。"
+      }
+    },
+    "cat2_stonetrack": {
+      "video": {
+        "input": "cat2.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_cat2_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A modern city crosswalk made of clean gray stone tiles under soft daylight; minimalist urban design, no animals visible, cinematic composition.",
+        "zh": "柔和日光下的现代城市斑马线，由干净的灰色石砖铺成；极简城市设计，不见动物，电影式构图。"
+      }
+    },
+    "dress_ic": {
+      "video": {
+        "input": "dress_ic.mp4",
+        "Ours": "BLURoutput_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_dress_ic_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "a woman holding a basket of flowers in front of a desert temple, wearing a dress; bright lights, cinematic, high detail.",
+        "zh": "一位女子手提花篮站在沙漠神庙前，身穿连衣裙；光线明亮，电影质感，细节丰富。"
+      }
+    },
+    "man_2_ic": {
+      "video": {
+        "input": "man_2_ic.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_man_2_ic_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "a man near a campfire at night; the campfire illuminates his face brightly, with enhanced light and shadow effects.",
+        "zh": "夜晚篝火旁的一名男子；篝火明亮地照亮他的脸部，光影效果增强。"
+      }
+    },
+    "man_ic": {
+      "video": {
+        "input": "man_ic.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "lumen.mp4",
+        "LightAVideo": "inpaint_man_ic_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "a man near a wide golden beach by the blue sea; golden shiny sand and a clear blue–pink–orange sky; bright sunlight shining on his face.",
+        "zh": "一名男子站在蔚蓝海边的金色宽广沙滩旁；金灿灿的沙地与清澈的蓝粉橙天空；明亮阳光照在他的脸上。"
+      }
+    },
+    "man1_z": {
+      "video": {
+        "input": "man1_z.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_man1_z_low_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A man smiling in a classroom, with rows of desks in the background.",
+        "zh": "一名男子在教室里微笑，背景是整齐排列的课桌。"
+      }
+    },
+    "man2_cyberpunk": {
+      "video": {
+        "input": "man2.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_man2_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A man wearing a black T-shirt dancing in a futuristic cyberpunk city under neon lights; neon illumination, smooth camera tracking, realistic motion, cinematic cyberpunk lighting.",
+        "zh": "一名身穿黑色T恤的男子在未来感赛博朋克城市的霓虹灯下跳舞；霓虹照明，镜头平滑跟随，动作真实，赛博朋克电影光效。"
+      }
+    },
+    "man5_z": {
+      "video": {
+        "input": "man5_z.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_man5_z_low_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A man indoors in a warm‑toned café corner, with a vintage brass chandelier hanging in the background.",
+        "zh": "一名男子在暖色调咖啡馆的角落里，背景悬挂着复古黄铜吊灯。"
+      }
+    },
+    "man7": {
+      "video": {
+        "input": "man7_ic.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_man7_ic_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "a man dancing in a bright room; outside the small glass window are night blue rain and a city street; detailed face, closed eyes, blinking.",
+        "zh": "一名男子在明亮的房间里跳舞；小玻璃窗外是夜色蓝雨与城市街道；面部细节清晰，闭眼与眨眼。"
+      }
+    },
+    "new2_field": {
+      "video": {
+        "input": "new2.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_new2_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A woman with long brown hair wearing a beige coat and black turtleneck talking in a wide open field surrounded by tall golden grass; bright sunlight and clear sky create a serene cinematic countryside atmosphere.",
+        "zh": "一位长棕发、穿米色大衣与黑色高领的女子在开阔的田野里说话，四周是高高的金色草丛；明亮阳光与晴朗天空营造宁静的电影式乡野氛围。"
+      }
+    },
+    "reb1_z": {
+      "video": {
+        "input": "reb1_z.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_reb1_z_low_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A woman standing by a misty lake surrounded by forests in the morning.",
+        "zh": "清晨，一位女子站在被森林环绕的薄雾湖畔。"
+      }
+    },
+    "woman2": {
+      "video": {
+        "input": "woman2.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_woman2_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A young woman with curly blonde hair gently touching her head with both hands, eyes closed and calm, surrounded by a lush garden of blooming flowers and greenery; warm sunlight creates golden highlights; cinematic close‑up portrait, vivid outdoor colors.",
+        "zh": "一位金卷发的年轻女子双手轻触头部，闭眼而宁静，周围是繁茂花园与盛开的花草；温暖阳光营造金色高光；电影式特写，户外色彩鲜明。"
+      }
+    },
+    "woman7_castle": {
+      "video": {
+        "input": "woman7.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_woman7_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A woman with long brown hair wearing a light dress standing facing a stone castle, holding a red keyboard under her arm; soft afternoon light illuminates the scene; cinematic fantasy atmosphere.",
+        "zh": "一位长棕发、身着轻薄连衣裙的女子面向石头城堡，臂下夹着红色键盘；柔和午后光洒满场景，电影般的奇幻氛围。"
+      }
+    },
+    "dancing2_wild": {
+      "video": {
+        "input": "dancing2.mp4",
+        "Ours": "output_video.mp4",
+        "Anyportal": "ANYPORTAL.mp4",
+        "Lumen": "Lumen.mp4",
+        "LightAVideo": "inpaint_dancing2_16frames.mp4"
+      },
+      "prompt_tar": {
+        "en": "A person wearing a yellow plaid shirt, black leather jacket, orange patterned headscarf, and hoop earrings is dancing confidently outdoors in a wide natural landscape surrounded by trees and grass. Warm sunlight filters through the leaves, soft daylight reflections on the jacket, cinematic outdoor lighting.",
+        "zh": "一位穿着黄色格子衬衫、黑色皮夹克、橙色头巾和耳环的人在户外宽广的自然景观中自信地跳舞，周围是树木和草地。温暖阳光透过树叶，皮夹克的软光反射，电影般的户外照明。"
+      }
+    }
+  }
+}
+
+

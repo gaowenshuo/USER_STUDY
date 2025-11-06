@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Study Videos</title>
+    <style>
+      :root {
+        --fg: #111;
+        --fg-2: #333;
+        --muted: #666;
+        --accent: #2a7dfa;
+        --accent-2: #185fd0;
+        --border: #e6e8ef;
+        --shadow: rgba(16,24,40,.08);
+      }
+      body { font-family: Arial, Helvetica, sans-serif; margin: 20px; color: var(--fg); }
+      h1 { font-size: 28px; margin: 10px 0 18px; letter-spacing: .2px; }
+      .notice { font-size: 14px; color: var(--fg-2); margin-bottom: 14px; }
+
+      #controls { gap: 12px !important; }
+      #controls button { font-size: 16px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border); background: white; cursor: pointer; box-shadow: 0 1px 2px var(--shadow); }
+      #controls button:hover { background: #f7f9ff; border-color: #d6defa; }
+      #controls button:disabled { opacity: .5; cursor: not-allowed; }
+
+      .progress { flex: 1; height: 10px; background: #f0f2f7; border-radius: 999px; overflow: hidden; }
+      .progress > .fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .25s ease; }
+
+      .case { margin-bottom: 30px; }
+      .case-title { font-size: 18px; font-weight: bold; margin: 8px 0 12px; }
+      .videos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+      .video-cell { display: flex; flex-direction: column; align-items: stretch; }
+      .video-cell label { font-size: 14px; color: #444; margin: 6px 0 8px; text-align: center; }
+      video { width: 100%; height: auto; background: #000; border-radius: 10px; box-shadow: 0 2px 8px var(--shadow); }
+
+      .prompt { margin-top: 12px; line-height: 1.6; padding: 10px 12px; background: #fafbfe; border: 1px solid var(--border); border-radius: 10px; }
+      .prompt .en { font-size: 15px; color: #111; }
+      .prompt .zh { font-size: 15px; color: #333; margin-top: 6px; }
+
+      .q-block-title { font-size: 15px; font-weight: bold; }
+      .q-options { display: flex; gap: 18px; margin-top: 8px; flex-wrap: wrap; }
+      .q-option { font-size: 14px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 10px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; box-shadow: 0 1px 2px var(--shadow); }
+      .q-option input[type="radio"] { transform: scale(1.4); accent-color: var(--accent); }
+      .q-option:hover { background: #f7f9ff; border-color: #d6defa; }
+
+      .export-btn { font-size: 16px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border); background: #fefefe; cursor: pointer; box-shadow: 0 1px 2px var(--shadow); margin-top: 12px; }
+      .export-btn:hover { background: #f7f9ff; border-color: #d6defa; }
+
+      /* floating export panel */
+      .export-panel { position: fixed; right: 20px; bottom: 20px; display: none; flex-direction: column; gap: 8px; padding: 12px; background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 24px var(--shadow); width: 280px; }
+      .export-panel .title { font-size: 14px; font-weight: bold; color: var(--fg); }
+      .export-panel .sub { font-size: 12px; color: var(--muted); }
+      .nick-input { font-size: 14px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; outline: none; }
+      .nick-input:focus { border-color: #c8d6ff; box-shadow: 0 0 0 3px rgba(100, 135, 255, 0.15); }
+    </style>
+  </head>
+  <body>
+    <h1>User Study Questionnaire</h1>
+    <div class="notice">说明：每个案例包含一个输入视频（最左侧）和四个匿名方法的结果（顺序已随机）。请在下方四项指标中分别选择你认为最好的方法（A/B/C/D）。</div>
+    <div id="controls" style="margin: 8px 0 12px; display: flex; gap: 8px; align-items: center;">
+      <button id="prevBtn">上一页</button>
+      <div class="progress" aria-label="progress">
+        <div id="progressFill" class="fill"></div>
+      </div>
+      <button id="nextBtn">下一页</button>
+    </div>
+    <div id="root"></div>
+
+    <!-- floating export panel (last page only) -->
+    <div id="exportPanel" class="export-panel">
+      <div class="title">提交与导出</div>
+      <div class="sub">请输入昵称（将写入导出文件名与内容）</div>
+      <input id="nicknameInput" class="nick-input" placeholder="昵称（可留空）" />
+      <button id="exportBtn" class="export-btn">导出结果 JSON</button>
+    </div>
+
+    <script>
+      async function load() {
+        try {
+          const res = await fetch('information.json');
+          if (!res.ok) throw new Error('Failed to load information.json');
+          const data = await res.json();
+          const cases = data.case || {};
+          const entries = Object.entries(cases);
+          const total = entries.length;
+          let index = 0;
+
+          const methodKeys = ['Ours', 'Anyportal', 'Lumen', 'LightAVideo'];
+          const criteria = [
+            { key: 'relevance', label: '(a) relevance to the prompt 视频质量和文本的对齐程度' },
+            { key: 'temporal', label: '(b) temporal coherence 视频帧间连续性和平滑度' },
+            { key: 'foreground', label: '(c) preservation of foreground details and motion 前景细节和运动的保留程度' },
+            { key: 'relighting', label: '(d) quality and harmonization of relighting on the foreground 前景重光照的质量和一致性' },
+          ];
+
+          // persist selections and shuffle mapping in-memory
+          const selections = {}; // { [caseName]: { [criterionKey]: methodKey } }
+          const shuffleMap = {}; // { [caseName]: [methodKey in shuffled order] }
+
+          function shuffleArray(arr) {
+            const a = arr.slice();
+            for (let i = a.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+          }
+
+          const root = document.getElementById('root');
+          const prevBtn = document.getElementById('prevBtn');
+          const nextBtn = document.getElementById('nextBtn');
+          const progressFill = document.getElementById('progressFill');
+          const exportPanel = document.getElementById('exportPanel');
+          const exportBtn = document.getElementById('exportBtn');
+          const nicknameInput = document.getElementById('nicknameInput');
+
+          function clearNode(node) {
+            while (node.firstChild) node.removeChild(node.firstChild);
+          }
+
+          function renderCase(i) {
+            clearNode(root);
+            const [caseName, cfg] = entries[i];
+
+            const wrap = document.createElement('div');
+            wrap.className = 'case';
+
+            const title = document.createElement('div');
+            title.className = 'case-title';
+            title.textContent = caseName;
+            wrap.appendChild(title);
+
+            const row = document.createElement('div');
+            row.className = 'videos';
+
+            const videoMap = cfg.video || {};
+            // Input fixed on the far left
+            (function renderInput() {
+              const cell = document.createElement('div');
+              cell.className = 'video-cell';
+              const label = document.createElement('label');
+              label.textContent = 'Input';
+              cell.appendChild(label);
+              const vid = document.createElement('video');
+              vid.controls = true;
+              vid.muted = true;
+              vid.loop = true;
+              vid.autoplay = true;
+              vid.playsInline = true;
+              vid.setAttribute('muted', '');
+              const file = videoMap['input'];
+              if (file) {
+                vid.src = `case/${caseName}/${file}`;
+                vid.addEventListener('canplay', () => {
+                  const p = vid.play();
+                  if (p && typeof p.catch === 'function') p.catch(() => {});
+                });
+              }
+              cell.appendChild(vid);
+              row.appendChild(cell);
+            })();
+
+            // Methods shuffled, anonymized as A/B/C/D
+            const letters = ['A', 'B', 'C', 'D'];
+            const shuffled = shuffleMap[caseName] || (shuffleMap[caseName] = shuffleArray(methodKeys));
+            shuffled.forEach((methodKey, idx) => {
+              const file = videoMap[methodKey];
+              const cell = document.createElement('div');
+              cell.className = 'video-cell';
+
+              const label = document.createElement('label');
+              label.textContent = `Option ${letters[idx]}`;
+              cell.appendChild(label);
+
+              const vid = document.createElement('video');
+              vid.controls = true;
+              vid.muted = true; // required for autoplay policies
+              vid.loop = true;
+              vid.autoplay = true;
+              vid.playsInline = true;
+              vid.setAttribute('muted', ''); // Safari/iOS compatibility
+              if (file) {
+                vid.src = `case/${caseName}/${file}`;
+                vid.addEventListener('canplay', () => {
+                  const p = vid.play();
+                  if (p && typeof p.catch === 'function') p.catch(() => {});
+                });
+              }
+              cell.appendChild(vid);
+
+              row.appendChild(cell);
+            });
+
+            wrap.appendChild(row);
+
+            const prompt = document.createElement('div');
+            prompt.className = 'prompt';
+            const en = document.createElement('div');
+            en.className = 'en';
+            en.textContent = (cfg.prompt_tar && cfg.prompt_tar.en) || '';
+            const zh = document.createElement('div');
+            zh.className = 'zh';
+            zh.textContent = (cfg.prompt_tar && cfg.prompt_tar.zh) || '';
+            prompt.appendChild(en);
+            prompt.appendChild(zh);
+            wrap.appendChild(prompt);
+
+            // Questionnaire section
+            const qWrap = document.createElement('div');
+            qWrap.style.marginTop = '12px';
+
+            const caseSelections = selections[caseName] || (selections[caseName] = {});
+
+            criteria.forEach((c) => {
+              const block = document.createElement('div');
+              block.style.margin = '12px 0';
+              const title = document.createElement('div');
+              title.className = 'q-block-title';
+              title.textContent = c.label + ' — 请选择最佳选项';
+              block.appendChild(title);
+
+              const options = document.createElement('div');
+              options.className = 'q-options';
+
+              const name = `q_${caseName}_${c.key}`;
+              letters.forEach((letter, idx) => {
+                const methodKey = shuffled[idx];
+                const id = `${name}_${letter}`;
+                const label = document.createElement('label');
+                label.className = 'q-option';
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = name;
+                input.value = methodKey; // store true method key
+                input.id = id;
+                input.addEventListener('change', () => {
+                  caseSelections[c.key] = methodKey;
+                });
+                if (caseSelections[c.key] === methodKey) input.checked = true;
+                const text = document.createTextNode(` Option ${letter}`);
+                label.appendChild(input);
+                label.appendChild(text);
+                options.appendChild(label);
+              });
+
+              block.appendChild(options);
+              qWrap.appendChild(block);
+            });
+
+            wrap.appendChild(qWrap);
+
+            root.appendChild(wrap);
+
+            // update controls (progress bar only)
+            const pct = total > 0 ? ((i + 1) / total) * 100 : 0;
+            if (progressFill) progressFill.style.width = pct + '%';
+            prevBtn.disabled = i === 0;
+            nextBtn.disabled = i === total - 1;
+            if (exportPanel) exportPanel.style.display = (i === total - 1) ? 'flex' : 'none';
+
+            // export panel handled globally (shown only on last page)
+          }
+
+          prevBtn.addEventListener('click', () => {
+            if (index > 0) {
+              index -= 1;
+              renderCase(index);
+            }
+          });
+          nextBtn.addEventListener('click', () => {
+            if (index < total - 1) {
+              index += 1;
+              renderCase(index);
+            }
+          });
+          // keyboard shortcuts
+          window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevBtn.click();
+            if (e.key === 'ArrowRight') nextBtn.click();
+          });
+
+          // export click handler (global)
+          if (exportBtn) {
+            exportBtn.addEventListener('click', () => {
+              const counts = {}; // { [criterionKey]: { [methodKey]: number } }
+              criteria.forEach(c => { counts[c.key] = {}; methodKeys.forEach(m => { counts[c.key][m] = 0; }); });
+
+              Object.entries(selections).forEach(([cn, sel]) => {
+                criteria.forEach(c => {
+                  const mk = sel[c.key];
+                  if (mk && counts[c.key] && mk in counts[c.key]) {
+                    counts[c.key][mk] += 1;
+                  }
+                });
+              });
+
+              const nickname = (nicknameInput && nicknameInput.value || '').trim();
+              const safeNick = nickname.replace(/[^a-zA-Z0-9-_]+/g, '_') || 'anon';
+              const payload = { nickname, counts };
+              const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `user_study_results_${safeNick}.json`;
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              URL.revokeObjectURL(url);
+            });
+          }
+
+          renderCase(index);
+        } catch (err) {
+          const root = document.getElementById('root');
+          root.textContent = 'Error: ' + err.message;
+        }
+      }
+
+      load();
+    </script>
+  </body>
+  </html>
+
+
